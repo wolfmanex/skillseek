@@ -5,7 +5,7 @@ import { canPost } from "@/lib/matching";
 import { getT } from "@/lib/i18n";
 import { createPosting } from "@/server/posting-actions";
 import { ActionForm, SubmitButton } from "@/components/forms";
-import { CountySelect, TradeCheckboxes } from "@/components/pickers";
+import { CountrySelect, TradeCheckboxes } from "@/components/pickers";
 import { Card, Field, PageHeader, inputCls } from "@/components/ui";
 
 export default async function NewPostingPage() {
@@ -39,8 +39,8 @@ export default async function NewPostingPage() {
         </Card>
         <Card className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <Field label={t("profile.county")}>
-              <CountySelect name="county" required value={user.profile.county} placeholder={t("common.choose")} />
+            <Field label={t("profile.country")}>
+              <CountrySelect locale={locale} name="country" required value={user.profile.country} placeholder={t("common.choose")} />
             </Field>
             <Field label={t("posting.city")}>
               <input name="city" className={inputCls} />

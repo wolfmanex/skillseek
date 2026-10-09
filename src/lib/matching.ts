@@ -5,8 +5,8 @@ export type MatchReason = "trade" | "location" | "available" | "certs" | "verifi
 export type ProForMatch = {
   role: Role;
   tradeSlugs: string[];
-  county: string | null;
-  serviceCounties: string[];
+  country: string | null;
+  serviceCountries: string[];
   certifications: string[];
   available: boolean;
   availableFrom: Date | null;
@@ -16,7 +16,7 @@ export type ProForMatch = {
 export type PostingForMatch = {
   seeking: Seeking;
   tradeSlugs: string[];
-  county: string;
+  country: string;
   startDate: Date | null;
   requiredCerts: string[];
 };
@@ -50,7 +50,7 @@ export function scoreMatch(pro: ProForMatch, posting: PostingForMatch): MatchRes
   const reasons: MatchReason[] = ["trade"];
   let score = WEIGHTS.trade * (shared.length / posting.tradeSlugs.length);
 
-  if (pro.county === posting.county || pro.serviceCounties.includes(posting.county)) {
+  if (pro.country === posting.country || pro.serviceCountries.includes(posting.country)) {
     score += WEIGHTS.location;
     reasons.push("location");
   }

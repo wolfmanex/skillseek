@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Profile, Role, Trade } from "@prisma/client";
-import { countyName } from "@/lib/constants";
+import { countryName } from "@/lib/constants";
 import { tradeName, type Locale, type T } from "@/lib/i18n";
 import type { MatchResult } from "@/lib/matching";
 import { Badge, Card, Stars } from "@/components/ui";
@@ -32,7 +32,7 @@ export function ProCard({
           <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-stone-600">
             <Badge tone={role === "SPECIALIST" ? "blue" : "stone"}>{t(`role.${role}`)}</Badge>
             {profile.verified && <Badge tone="green">✓ {t("pro.verified")}</Badge>}
-            {profile.county && <span>{countyName(profile.county)}</span>}
+            {profile.country && <span>{countryName(profile.country, locale)}</span>}
           </div>
         </div>
         {match && (

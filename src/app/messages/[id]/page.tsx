@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireProfile } from "@/lib/auth";
-import { getT } from "@/lib/i18n";
+import { dateTag, getT } from "@/lib/i18n";
 import { getConversation } from "@/server/queries";
 import { markRead, sendMessage } from "@/server/message-actions";
 import { withdrawApplication } from "@/server/posting-actions";
@@ -21,7 +21,7 @@ export default async function ConversationPage({ params }: PageProps<"/messages/
   const otherUser = iAmApplicant ? convo.posting.author : convo.applicant;
   const other = otherUser.profile;
   const time = (d: Date) =>
-    d.toLocaleString(locale === "et" ? "et-EE" : "en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    d.toLocaleString(dateTag(locale), { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 
   return (
     <div className="mx-auto flex max-w-3xl flex-col gap-4">

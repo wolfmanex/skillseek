@@ -1,9 +1,9 @@
 import type { Prisma } from "@prisma/client";
 import { db } from "@/lib/db";
-import { getT, tradeName } from "@/lib/i18n";
-import { isCounty } from "@/lib/constants";
+import { getT, sortTrades, tradeName } from "@/lib/i18n";
+import { isCountry } from "@/lib/constants";
 import { ratingsFor } from "@/server/queries";
-import { CountySelect } from "@/components/pickers";
+import { CountrySelect } from "@/components/pickers";
 import { ProCard } from "@/components/pro-card";
 import { Empty, PageHeader, btnCls, inputCls } from "@/components/ui";
 
@@ -14,7 +14,7 @@ export default async function ProsPage({ searchParams }: PageProps<"/pros">) {
   const trades = await db.trade.findMany({ orderBy: { nameEn: "asc" } });
 
   const trade = one("trade");
-  const county = one("county");
+  const country = one("country");
   const role = one("role");
   const q = one("q");
   const available = one("available") === "1";
@@ -23,7 +23,7 @@ export default async function ProsPage({ searchParams }: PageProps<"/pros">) {
     user: { role: role === "SUBCONTRACTOR" || role === "SPECIALIST" ? role : { not: "CONTRACTOR" } },
   };
   if (trade) where.trades = { some: { slug: trade } };
-  if (isCounty(county)) where.OR = [{ county }, { serviceCounties: { has: county } }];
+  if (isCountry(country)) where.OR = [{ country }, { serviceCountries: { has: country } }];
   if (available) where.available = true;
   if (q) {
     where.AND = [
@@ -52,11 +52,11 @@ export default async function ProsPage({ searchParams }: PageProps<"/pros">) {
         <input name="q" defaultValue={q} placeholder={t("common.search")} className={`${inputCls} lg:col-span-2`} />
         <select name="trade" defaultValue={trade} className={inputCls}>
           <option value="">{t("filter.allTrades")}</option>
-          {trades.map((tr) => (
+          {sortTrades(trades, locale).map((tr) => (
             <option key={tr.slug} value={tr.slug}>{tradeName(tr, locale)}</option>
           ))}
         </select>
-        <CountySelect name="county" value={county} placeholder={t("filter.allCounties")} />
+        <CountrySelect locale={locale} name="country" value={country} placeholder={t("filter.allCountries")} />
         <select name="role" defaultValue={role} className={inputCls}>
           <option value="">{t("filter.allPros")}</option>
           <option value="SUBCONTRACTOR">{t("role.SUBCONTRACTOR")}</option>

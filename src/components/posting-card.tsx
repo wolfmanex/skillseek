@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Posting, Profile, Trade } from "@prisma/client";
-import { countyName } from "@/lib/constants";
+import { countryName } from "@/lib/constants";
 import { formatDate, formatEuro, tradeName, type Locale, type T } from "@/lib/i18n";
 import type { MatchResult } from "@/lib/matching";
 import { Badge, Card } from "@/components/ui";
@@ -36,7 +36,7 @@ export function PostingCard({
         <div>
           <Link href={`/postings/${posting.id}`} className="font-semibold hover:underline">{posting.title}</Link>
           <p className="mt-1 text-xs text-stone-600">
-            {author?.companyName || author?.displayName} · {countyName(posting.county)}
+            {author?.companyName || author?.displayName} · {countryName(posting.country, locale)}
             {posting.city ? `, ${posting.city}` : ""}
           </p>
         </div>

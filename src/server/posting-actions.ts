@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import type { ApplicationStatus, PostingStatus } from "@prisma/client";
 import { db } from "@/lib/db";
 import { requireProfile } from "@/lib/auth";
-import { isCounty } from "@/lib/constants";
+import { isCountry } from "@/lib/constants";
 import { canPost, canRespondTo } from "@/lib/matching";
 import { STATUS_FLOW } from "@/lib/postings";
 import { appUrl, sendEmail } from "@/lib/email";
@@ -21,12 +21,12 @@ export async function createPosting(_prev: FormState, form: FormData): Promise<F
 
   const title = str(form, "title");
   const description = str(form, "description");
-  const county = str(form, "county");
+  const country = str(form, "country");
   const tradeSlugs = list(form, "trades");
   const seeking = str(form, "seeking") as (typeof SEEKING)[number];
 
   if (!title || !description) return { error: t("posting.error.required") };
-  if (!isCounty(county)) return { error: t("posting.error.county") };
+  if (!isCountry(country)) return { error: t("posting.error.country") };
   if (tradeSlugs.length === 0) return { error: t("posting.error.trades") };
   if (!SEEKING.includes(seeking)) return { error: t("posting.error.required") };
 
@@ -44,7 +44,7 @@ export async function createPosting(_prev: FormState, form: FormData): Promise<F
       authorId: user.id,
       title,
       description,
-      county,
+      country,
       city: optStr(form, "city"),
       startDate,
       endDate,

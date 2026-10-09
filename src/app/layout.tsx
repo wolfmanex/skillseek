@@ -8,7 +8,10 @@ const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin", "lat
 
 export const metadata: Metadata = {
   title: "Skillseek",
-  description: "Find construction subcontractors and skilled specialists in Estonia.",
+  description: "Find construction subcontractors and skilled specialists across the EU.",
+  applicationName: "Skillseek",
+  authors: [{ name: "Wolfman OÜ" }],
+  publisher: "Wolfman OÜ",
 };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
@@ -19,7 +22,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <Nav />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
         <footer className="border-t border-stone-200 py-6 text-center text-xs text-stone-500">
-          {t("footer.tagline")}
+          <p>{t("footer.tagline")}</p>
+          <p className="mt-1">{t("footer.owner", { year: new Date().getFullYear() })}</p>
         </footer>
       </body>
     </html>

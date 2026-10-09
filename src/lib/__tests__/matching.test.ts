@@ -4,8 +4,8 @@ import { canPost, canRespondTo, scoreMatch, type PostingForMatch, type ProForMat
 const pro: ProForMatch = {
   role: "SUBCONTRACTOR",
   tradeSlugs: ["electrical"],
-  county: "harju",
-  serviceCounties: ["harju", "rapla"],
+  country: "EE",
+  serviceCountries: ["EE", "LV"],
   certifications: ["Electrician level 5"],
   available: true,
   availableFrom: null,
@@ -15,7 +15,7 @@ const pro: ProForMatch = {
 const posting: PostingForMatch = {
   seeking: "SUBCONTRACTOR",
   tradeSlugs: ["electrical"],
-  county: "harju",
+  country: "EE",
   startDate: new Date("2026-11-01"),
   requiredCerts: ["electrician LEVEL 5"],
 };
@@ -52,8 +52,8 @@ describe("scoreMatch", () => {
     expect(result?.score).toBe(80);
   });
 
-  it("drops location points outside the pro's counties", () => {
-    const result = scoreMatch(pro, { ...posting, county: "tartu" });
+  it("drops location points outside the pro's countries", () => {
+    const result = scoreMatch(pro, { ...posting, country: "DE" });
     expect(result?.score).toBe(75);
     expect(result?.reasons).not.toContain("location");
   });
