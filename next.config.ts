@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Every page depends on the session cookie, so the app renders per request.
+  // Cache Components can be adopted later for public pages (job and pro listings).
   turbopack: {
     rules: {
       "*.css": {

@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CONTRACTOR
+  SUBCONTRACTOR
+  SPECIALIST
+}
+
+enum Seeking {
+  SUBCONTRACTOR
+  SPECIALIST
+  ANY
+}
+
+enum PostingStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CLOSED
+}
+
+enum ApplicationStatus {
+  PENDING
+  SHORTLISTED
+  ACCEPTED
+  DECLINED
+}
+
+enum ApplicationSource {
+  APPLIED
+  INVITED
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         Role
+  isAdmin      Boolean  @default(false)
+  locale       String   @default("et")
+  createdAt    DateTime @default(now())
+
+  profile        Profile?
+  sessions       Session[]
+  postings       Posting[]
+  applications   Application[]
+  messages       Message[]
+  reviewsWritten Review[]      @relation("ReviewAuthor")
+  reviewsGot     Review[]      @relation("ReviewSubject")
+}
+
+model Session {
+  id        String   @id
+  userId    String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Profile {
+  id              String    @id @default(cuid())
+  userId          String    @unique
+  displayName     String
+  companyName     String?
+  regCode         String?
+  bio             String    @default("")
+  phone           String?
+  website         String?
+  county          String?
+  serviceCounties String[]
+  certifications  String[]
+  portfolioUrls   String[]
+  yearsExperience Int?
+  hourlyRate      Int?
+  available       Boolean   @default(true)
+  availableFrom   DateTime?
+  verified        Boolean   @default(false)
+  updatedAt       DateTime  @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  trades Trade[]
+}
+
+model Trade {
+  id       String    @id @default(cuid())
+  slug     String    @unique
+  nameEn   String
+  nameEt   String
+  profiles Profile[]
+  postings Posting[]
+}
+
+model Posting {
+  id             String        @id @default(cuid())
+  authorId       String
+  title          String
+  description    String
+  county         String
+  city           String?
+  startDate      DateTime?
+  endDate        DateTime?
+  budgetMin      Int?
+  budgetMax      Int?
+  seeking        Seeking       @default(ANY)
+  requiredCerts  String[]
+  status         PostingStatus @default(OPEN)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  author       User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  trades       Trade[]
+  applications Application[]
+  reviews      Review[]
+
+  @@index([status, county])
+}
+
+model Application {
+  id          String            @id @default(cuid())
+  postingId   String
+  applicantId String
+  message     String            @default("")
+  status      ApplicationStatus @default(PENDING)
+  source      ApplicationSource @default(APPLIED)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  posting   Posting   @relation(fields: [postingId], references: [id], onDelete: Cascade)
+  applicant User      @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@unique([postingId, applicantId])
+}
+
+model Message {
+  id            String    @id @default(cuid())
+  applicationId String
+  senderId      String
+  body          String
+  readAt        DateTime?
+  createdAt     DateTime  @default(now())
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  sender      User        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId, createdAt])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  postingId String
+  authorId  String
+  subjectId String
+  rating    Int
+  comment   String   @default("")
+  createdAt DateTime @default(now())
+
+  posting Posting @relation(fields: [postingId], references: [id], onDelete: Cascade)
+  author  User    @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  subject User    @relation("ReviewSubject", fields: [subjectId], references: [id], onDelete: Cascade)
+
+  @@unique([postingId, authorId, subjectId])
+}
