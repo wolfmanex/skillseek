@@ -9,8 +9,8 @@ export function toProForMatch(p: ProfileWithTrades): ProForMatch {
   return {
     role: p.user.role,
     tradeSlugs: p.trades.map((t) => t.slug),
-    county: p.county,
-    serviceCounties: p.serviceCounties,
+    country: p.country,
+    serviceCountries: p.serviceCountries,
     certifications: p.certifications,
     available: p.available,
     availableFrom: p.availableFrom,
@@ -64,7 +64,7 @@ export async function suggestedPros(postingId: string, limit = 8) {
   const forMatch = {
     seeking: posting.seeking,
     tradeSlugs: posting.trades.map((t) => t.slug),
-    county: posting.county,
+    country: posting.country,
     startDate: posting.startDate,
     requiredCerts: posting.requiredCerts,
   };
@@ -98,7 +98,7 @@ export async function suggestedPostings(userId: string, limit = 8) {
       match: scoreMatch(pro, {
         seeking: posting.seeking,
         tradeSlugs: posting.trades.map((t) => t.slug),
-        county: posting.county,
+        country: posting.country,
         startDate: posting.startDate,
         requiredCerts: posting.requiredCerts,
       }),

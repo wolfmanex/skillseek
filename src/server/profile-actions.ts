@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireUser, requireAdmin } from "@/lib/auth";
-import { isCounty } from "@/lib/constants";
+import { isCountry } from "@/lib/constants";
 import { getT } from "@/lib/i18n";
 import { list, lines, optDate, optInt, optStr, str, type FormState } from "@/server/form";
 
@@ -18,7 +18,7 @@ export async function saveProfile(_prev: FormState, form: FormData): Promise<For
   const tradeSlugs = list(form, "trades");
   if (tradeSlugs.length === 0 && user.role !== "CONTRACTOR") return { error: t("profile.error.trades") };
 
-  const county = str(form, "county");
+  const country = str(form, "country");
   const website = optStr(form, "website");
   const portfolioUrls = lines(form, "portfolioUrls").filter((u) => /^https?:\/\//i.test(u));
 
@@ -29,8 +29,8 @@ export async function saveProfile(_prev: FormState, form: FormData): Promise<For
     bio: str(form, "bio"),
     phone: optStr(form, "phone"),
     website: website && /^https?:\/\//i.test(website) ? website : website ? `https://${website}` : null,
-    county: isCounty(county) ? county : null,
-    serviceCounties: list(form, "serviceCounties").filter(isCounty),
+    country: isCountry(country) ? country : null,
+    serviceCountries: list(form, "serviceCountries").filter(isCountry),
     certifications: lines(form, "certifications"),
     portfolioUrls,
     yearsExperience: optInt(form, "yearsExperience"),

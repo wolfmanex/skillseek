@@ -91,8 +91,8 @@ model Profile {
   bio             String    @default("")
   phone           String?
   website         String?
-  county          String?
-  serviceCounties String[]
+  country          String?
+  serviceCountries String[]
   certifications  String[]
   portfolioUrls   String[]
   photoKeys       String[]
@@ -112,6 +112,7 @@ model Trade {
   slug     String    @unique
   nameEn   String
   nameEt   String
+  nameFi   String    @default("")
   profiles Profile[]
   postings Posting[]
 }
@@ -121,7 +122,7 @@ model Posting {
   authorId       String
   title          String
   description    String
-  county         String
+  country         String
   city           String?
   startDate      DateTime?
   endDate        DateTime?
@@ -138,7 +139,7 @@ model Posting {
   applications Application[]
   reviews      Review[]
 
-  @@index([status, county])
+  @@index([status, country])
 }
 
 model Application {

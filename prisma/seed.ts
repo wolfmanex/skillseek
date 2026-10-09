@@ -20,8 +20,8 @@ type DemoUser = {
     companyName?: string;
     regCode?: string;
     bio: string;
-    county: string;
-    serviceCounties?: string[];
+    country: string;
+    serviceCountries?: string[];
     certifications?: string[];
     yearsExperience?: number;
     hourlyRate?: number;
@@ -41,7 +41,7 @@ const DEMO_USERS: DemoUser[] = [
       companyName: "Põhjaehitus OÜ",
       regCode: "12345678",
       bio: "General contractor for residential and commercial buildings in Harjumaa.",
-      county: "harju",
+      country: "EE",
       verified: true,
     },
     trades: ["general-construction"],
@@ -54,8 +54,8 @@ const DEMO_USERS: DemoUser[] = [
       companyName: "Volt Elekter OÜ",
       regCode: "14567890",
       bio: "Electrical installation for apartment buildings and offices. Crew of 8.",
-      county: "harju",
-      serviceCounties: ["harju", "rapla", "laane-viru"],
+      country: "EE",
+      serviceCountries: ["EE", "LV", "FI"],
       certifications: ["Electrician level 5", "Working at height"],
       yearsExperience: 12,
       verified: true,
@@ -70,8 +70,8 @@ const DEMO_USERS: DemoUser[] = [
       companyName: "Tartu Torutööd OÜ",
       regCode: "11223344",
       bio: "Plumbing and heating for new builds and renovations.",
-      county: "tartu",
-      serviceCounties: ["tartu", "jogeva", "polva"],
+      country: "EE",
+      serviceCountries: ["EE", "LV"],
       yearsExperience: 9,
     },
     trades: ["plumbing", "hvac"],
@@ -82,8 +82,8 @@ const DEMO_USERS: DemoUser[] = [
     profile: {
       displayName: "Jaan Saar",
       bio: "Tiler with 15 years of experience. Bathrooms, kitchens, large-format tiles.",
-      county: "harju",
-      serviceCounties: ["harju"],
+      country: "EE",
+      serviceCountries: ["EE", "FI"],
       yearsExperience: 15,
       hourlyRate: 28,
     },
@@ -95,8 +95,8 @@ const DEMO_USERS: DemoUser[] = [
     profile: {
       displayName: "Ivan Petrov",
       bio: "Certified welder, steel structures and railings.",
-      county: "ida-viru",
-      serviceCounties: ["ida-viru", "harju", "laane-viru"],
+      country: "EE",
+      serviceCountries: ["EE", "LV", "LT"],
       certifications: ["EN ISO 9606-1", "Working at height"],
       yearsExperience: 20,
       hourlyRate: 32,
@@ -108,10 +108,10 @@ const DEMO_USERS: DemoUser[] = [
     email: "puusepp@skillseek.test",
     role: "SPECIALIST",
     profile: {
-      displayName: "Liis Oja",
-      bio: "Carpenter: roof structures, terraces, interior finishing.",
-      county: "parnu",
-      serviceCounties: ["parnu", "viljandi"],
+      displayName: "Mikko Virtanen",
+      bio: "Carpenter based in Helsinki: roof structures, terraces, interior finishing. Works in Estonia too.",
+      country: "FI",
+      serviceCountries: ["FI", "EE"],
       yearsExperience: 7,
       hourlyRate: 25,
       available: false,
@@ -145,7 +145,7 @@ async function seedDemo() {
       title: "Electrical installation for a 24-unit apartment building",
       description:
         "New 4-storey apartment building in Tallinn (Kristiine). Full electrical installation: wiring, distribution boards, lighting, low-voltage. Drawings available.",
-      county: "harju",
+      country: "EE",
       city: "Tallinn",
       startDate: new Date(Date.now() + 30 * day),
       endDate: new Date(Date.now() + 150 * day),
@@ -161,7 +161,7 @@ async function seedDemo() {
       authorId: ids["admin@skillseek.test"],
       title: "Bathroom tiling, 12 apartments",
       description: "Wall and floor tiling in 12 bathrooms, approx. 450 m². Materials provided.",
-      county: "harju",
+      country: "EE",
       city: "Tallinn",
       startDate: new Date(Date.now() + 45 * day),
       budgetMax: 18000,
@@ -174,7 +174,7 @@ async function seedDemo() {
       authorId: ids["elekter@skillseek.test"],
       title: "Welder needed for cable tray supports",
       description: "Two weeks of steel support fabrication on site in Rakvere.",
-      county: "laane-viru",
+      country: "EE",
       city: "Rakvere",
       startDate: new Date(Date.now() + 14 * day),
       seeking: "SPECIALIST",
@@ -187,7 +187,7 @@ async function seedDemo() {
       authorId: ids["admin@skillseek.test"],
       title: "Steel railings for office building",
       description: "Fabrication and installation of stair railings.",
-      county: "harju",
+      country: "EE",
       status: "COMPLETED",
       seeking: "SPECIALIST",
       trades: { connect: [{ slug: "welding" }] },

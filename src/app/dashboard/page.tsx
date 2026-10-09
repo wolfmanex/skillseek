@@ -36,7 +36,7 @@ export default async function DashboardPage() {
 
   const missing = [
     user.profile.trades.length === 0 && t("dash.missing.trades"),
-    !user.profile.county && t("dash.missing.county"),
+    !user.profile.country && t("dash.missing.country"),
     !user.profile.bio && t("dash.missing.bio"),
   ].filter(Boolean);
 

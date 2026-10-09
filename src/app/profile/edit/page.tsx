@@ -6,7 +6,7 @@ import { removePhoto } from "@/server/photo-actions";
 import { MAX_PHOTOS, photoUrl, storageEnabled } from "@/lib/storage";
 import { PhotoUploader } from "@/components/photo-uploader";
 import { ActionForm, SubmitButton } from "@/components/forms";
-import { CountyCheckboxes, CountySelect, TradeCheckboxes } from "@/components/pickers";
+import { CountryCheckboxes, CountrySelect, TradeCheckboxes } from "@/components/pickers";
 import { Card, Field, PageHeader, inputCls } from "@/components/ui";
 
 export default async function EditProfilePage() {
@@ -49,8 +49,8 @@ export default async function EditProfilePage() {
             <Field label={t("profile.website")}>
               <input name="website" defaultValue={p?.website ?? ""} className={inputCls} />
             </Field>
-            <Field label={t("profile.county")}>
-              <CountySelect name="county" value={p?.county} placeholder={t("common.choose")} />
+            <Field label={t("profile.country")}>
+              <CountrySelect locale={locale} name="country" value={p?.country} placeholder={t("common.choose")} />
             </Field>
           </div>
         </Card>
@@ -63,8 +63,8 @@ export default async function EditProfilePage() {
         {isPro && (
           <Card className="space-y-4">
             <h2 className="font-semibold">{t("profile.section.work")}</h2>
-            <Field label={t("profile.serviceCounties")}>
-              <CountyCheckboxes name="serviceCounties" selected={p?.serviceCounties ?? []} />
+            <Field label={t("profile.serviceCountries")}>
+              <CountryCheckboxes locale={locale} name="serviceCountries" selected={p?.serviceCountries ?? []} />
             </Field>
             <div className="grid gap-4 sm:grid-cols-3">
               <Field label={t("profile.years")}>

@@ -3,7 +3,7 @@ import type { Prisma } from "@prisma/client";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
-import { countyName } from "@/lib/constants";
+import { countryName } from "@/lib/constants";
 import { canRespondTo } from "@/lib/matching";
 import { STATUS_FLOW } from "@/lib/postings";
 import { formatDate, getT, tradeName, type Locale, type T } from "@/lib/i18n";
@@ -40,7 +40,7 @@ export default async function PostingPage({ params }: PageProps<"/postings/[id]"
   const author = posting.author.profile;
 
   const facts: [string, string][] = [
-    [t("profile.county"), `${countyName(posting.county)}${posting.city ? `, ${posting.city}` : ""}`],
+    [t("profile.country"), `${countryName(posting.country, locale)}${posting.city ? `, ${posting.city}` : ""}`],
     [t("posting.budget"), budgetText(posting, locale, t)],
     [t("posting.seeking"), t(`seeking.${posting.seeking}`)],
   ];

@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
-import { countyName } from "@/lib/constants";
+import { countryName } from "@/lib/constants";
 import { canPost, canRespondTo } from "@/lib/matching";
 import { formatDate, formatEuro, getT, tradeName } from "@/lib/i18n";
 import { invitePro } from "@/server/posting-actions";
@@ -40,7 +40,7 @@ export default async function ProPage({ params }: PageProps<"/pros/[id]">) {
   const facts: [string, string][] = [];
   if (p.companyName) facts.push([t("profile.contactName"), p.displayName]);
   if (p.regCode) facts.push([t("profile.regCode"), p.regCode]);
-  if (p.county) facts.push([t("profile.county"), countyName(p.county)]);
+  if (p.country) facts.push([t("profile.country"), countryName(p.country, locale)]);
   if (p.yearsExperience != null) facts.push([t("profile.years"), String(p.yearsExperience)]);
   if (p.hourlyRate != null) facts.push([t("profile.rate"), formatEuro(p.hourlyRate, locale)]);
   if (p.availableFrom) facts.push([t("profile.availableFrom"), formatDate(p.availableFrom, locale)]);
@@ -147,10 +147,10 @@ export default async function ProPage({ params }: PageProps<"/pros/[id]">) {
                 </div>
               )}
             </dl>
-            {p.serviceCounties.length > 0 && (
+            {p.serviceCountries.length > 0 && (
               <div className="mt-4 border-t border-stone-100 pt-3">
-                <p className="mb-1 text-xs text-stone-500">{t("profile.serviceCounties")}</p>
-                <p className="text-sm">{p.serviceCounties.map(countyName).join(", ")}</p>
+                <p className="mb-1 text-xs text-stone-500">{t("profile.serviceCountries")}</p>
+                <p className="text-sm">{p.serviceCountries.map((c) => countryName(c, locale)).join(", ")}</p>
               </div>
             )}
           </Card>
