@@ -2,6 +2,9 @@ import { requireUser } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { getT } from "@/lib/i18n";
 import { saveProfile } from "@/server/profile-actions";
+import { removePhoto } from "@/server/photo-actions";
+import { MAX_PHOTOS, photoUrl, storageEnabled } from "@/lib/storage";
+import { PhotoUploader } from "@/components/photo-uploader";
 import { ActionForm, SubmitButton } from "@/components/forms";
 import { CountyCheckboxes, CountySelect, TradeCheckboxes } from "@/components/pickers";
 import { Card, Field, PageHeader, inputCls } from "@/components/ui";
@@ -94,6 +97,33 @@ export default async function EditProfilePage() {
 
         <SubmitButton>{t("common.save")}</SubmitButton>
       </ActionForm>
+
+      {/* Photos live outside the profile form: they save immediately on upload. */}
+      {p && storageEnabled() && (
+        <Card className="mt-6 space-y-4">
+          <div>
+            <h2 className="font-semibold">{t("photos.title")}</h2>
+            <p className="text-xs text-stone-500">{t("photos.hint", { max: MAX_PHOTOS })}</p>
+          </div>
+          {p.photoKeys.length > 0 && (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {p.photoKeys.map((key) => (
+                <div key={key} className="space-y-1">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photoUrl(key)} alt="" className="aspect-square w-full rounded-md object-cover" />
+                  <form action={removePhoto}>
+                    <input type="hidden" name="key" value={key} />
+                    <button className="text-xs text-red-700 underline">{t("photos.remove")}</button>
+                  </form>
+                </div>
+              ))}
+            </div>
+          )}
+          {p.photoKeys.length < MAX_PHOTOS && (
+            <PhotoUploader labels={{ add: t("photos.add"), uploading: t("photos.uploading"), error: t("photos.error") }} />
+          )}
+        </Card>
+      )}
     </div>
   );
 }

@@ -4,7 +4,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // On Neon, DATABASE_URL is the pooled connection and DATABASE_URL_UNPOOLED the direct one (used for migrations).
+  // Both names match what the Neon integration on Vercel sets automatically.
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum Role {
@@ -49,6 +52,7 @@ model User {
 
   profile        Profile?
   sessions       Session[]
+  loginTokens    LoginToken[]
   postings       Posting[]
   applications   Application[]
   messages       Message[]
@@ -60,6 +64,18 @@ model Session {
   id        String   @id
   userId    String
   expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+// One-time email sign-in links. Only a hash of the token is stored.
+model LoginToken {
+  tokenHash String   @id
+  userId    String
+  expiresAt DateTime
+  usedAt    DateTime?
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -79,6 +95,7 @@ model Profile {
   serviceCounties String[]
   certifications  String[]
   portfolioUrls   String[]
+  photoKeys       String[]
   yearsExperience Int?
   hourlyRate      Int?
   available       Boolean   @default(true)

@@ -60,6 +60,7 @@ export async function Nav() {
               <Link href={user.profile ? `/pros/${user.id}` : "/profile/edit"} className={link}>
                 {user.profile?.displayName ?? user.email}
               </Link>
+              <Link href="/account" className={link}>{t("nav.account")}</Link>
               <form action={logout}>
                 <button className={link}>{t("nav.logout")}</button>
               </form>

@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { randomBytes } from "node:crypto";
+import { createHash, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 
@@ -35,6 +35,45 @@ export async function destroySession() {
   const id = store.get(SESSION_COOKIE)?.value;
   if (id) await db.session.deleteMany({ where: { id } });
   store.delete(SESSION_COOKIE);
+}
+
+const LOGIN_LINK_MINUTES = 20;
+const FRESH_SESSION_MINUTES = 15;
+
+const sha256 = (value: string) => createHash("sha256").update(value).digest("hex");
+
+/** Creates a one-time sign-in token for an email link and returns the raw token. */
+export async function createLoginToken(userId: string) {
+  const token = randomBytes(32).toString("base64url");
+  await db.loginToken.create({
+    data: {
+      tokenHash: sha256(token),
+      userId,
+      expiresAt: new Date(Date.now() + LOGIN_LINK_MINUTES * 60 * 1000),
+    },
+  });
+  return token;
+}
+
+/** Marks a sign-in token used and returns its user id, or null if it is unknown, used or expired. */
+export async function consumeLoginToken(token: string) {
+  const tokenHash = sha256(token);
+  // updateMany with the conditions in the filter makes "use once" atomic.
+  const { count } = await db.loginToken.updateMany({
+    where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },
+    data: { usedAt: new Date() },
+  });
+  if (count === 0) return null;
+  const row = await db.loginToken.findUnique({ where: { tokenHash } });
+  return row?.userId ?? null;
+}
+
+/** True when the current session was created in the last few minutes (e.g. right after an email link). */
+export async function sessionIsFresh() {
+  const id = (await cookies()).get(SESSION_COOKIE)?.value;
+  if (!id) return false;
+  const session = await db.session.findUnique({ where: { id } });
+  return !!session && session.createdAt.getTime() > Date.now() - FRESH_SESSION_MINUTES * 60 * 1000;
 }
 
 // Cached per request so layouts and pages can both call it cheaply.

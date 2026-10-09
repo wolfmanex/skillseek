@@ -6,6 +6,7 @@ import { countyName } from "@/lib/constants";
 import { canPost, canRespondTo } from "@/lib/matching";
 import { formatDate, formatEuro, getT, tradeName } from "@/lib/i18n";
 import { invitePro } from "@/server/posting-actions";
+import { photoUrl } from "@/lib/storage";
 import { Badge, ButtonLink, Card, Empty, Stars, btnSecondaryCls, inputCls } from "@/components/ui";
 
 export default async function ProPage({ params }: PageProps<"/pros/[id]">) {
@@ -70,6 +71,20 @@ export default async function ProPage({ params }: PageProps<"/pros/[id]">) {
             {p.trades.map((tr) => <Badge key={tr.id} tone="amber">{tradeName(tr, locale)}</Badge>)}
           </div>
         </Card>
+
+        {p.photoKeys.length > 0 && (
+          <Card>
+            <h2 className="mb-3 font-semibold">{t("photos.title")}</h2>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              {p.photoKeys.map((key) => (
+                <a key={key} href={photoUrl(key)} target="_blank" rel="noopener noreferrer">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photoUrl(key)} alt="" loading="lazy" className="aspect-[4/3] w-full rounded-md object-cover" />
+                </a>
+              ))}
+            </div>
+          </Card>
+        )}
 
         {(p.certifications.length > 0 || p.portfolioUrls.length > 0) && (
           <Card className="space-y-4">

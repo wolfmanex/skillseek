@@ -2,9 +2,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { getT } from "@/lib/i18n";
-import { login } from "@/server/auth-actions";
+import { login, requestLoginLink } from "@/server/auth-actions";
 import { ActionForm, SubmitButton } from "@/components/forms";
-import { Card, Field, inputCls } from "@/components/ui";
+import { Card, Field, btnSecondaryCls, inputCls } from "@/components/ui";
 
 export default async function LoginPage() {
   if (await getCurrentUser()) redirect("/dashboard");
@@ -23,6 +23,13 @@ export default async function LoginPage() {
           <SubmitButton className="w-full rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-stone-950 hover:bg-amber-400">
             {t("auth.login")}
           </SubmitButton>
+        </ActionForm>
+      </Card>
+      <Card className="mt-4">
+        <ActionForm action={requestLoginLink} className="space-y-3">
+          <p className="text-sm text-stone-600">{t("auth.linkIntro")}</p>
+          <input name="email" type="email" required autoComplete="email" placeholder={t("auth.email")} className={inputCls} />
+          <SubmitButton className={btnSecondaryCls}>{t("auth.sendLink")}</SubmitButton>
         </ActionForm>
       </Card>
       <p className="mt-4 text-center text-sm text-stone-600">

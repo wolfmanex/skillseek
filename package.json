@@ -13,9 +13,12 @@
     "db:deploy": "prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:demo": "tsx prisma/seed.ts --demo",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1148.0",
+    "@aws-sdk/s3-request-presigner": "^3.1148.0",
     "@prisma/client": "^6.19.3",
     "bcryptjs": "^3.0.3",
     "next": "16.4.0",

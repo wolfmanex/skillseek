@@ -23,6 +23,11 @@ export function ActionForm({
           {state.error}
         </p>
       )}
+      {state?.ok && (
+        <p role="status" className="rounded-md bg-green-50 px-3 py-2 text-sm text-green-800">
+          {state.ok}
+        </p>
+      )}
       {children}
     </form>
   );
