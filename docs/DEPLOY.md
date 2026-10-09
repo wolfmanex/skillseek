@@ -1,6 +1,6 @@
 # Deploying Skillseek on free tiers
 
-The setup: **Vercel Hobby** (app, Frankfurt `fra1`), **Neon free** (Postgres, Frankfurt), **Resend free** (sign-in and notification email) and **Cloudflare R2** (photos, EU bucket). Each account takes a few minutes. Database migrations and the trade list are applied automatically on every deploy.
+The setup: **Vercel Hobby** (app, Frankfurt `fra1`), **Neon free** (Postgres, Frankfurt), **Resend free** (sign-in and notification email) and **Cloudflare R2** (photos, EU bucket). Each account takes a few minutes. Database migrations (including the trade list) run automatically on every **production** deploy. Preview deploys for pull requests skip them, because they usually share the production database; set `MIGRATE_PREVIEWS=1` for the Preview environment only if previews have their own database (e.g. Neon branching).
 
 > Vercel Hobby is for non-commercial use. It's fine for testing; switch to Pro before charging customers.
 
