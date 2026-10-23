@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { formatDate, getT } from "@/lib/i18n";
 import { toggleVerified } from "@/server/profile-actions";
+import { recheckCompany } from "@/server/verification-actions";
+import { RegistryFacts } from "@/components/verification";
 import { Badge, ButtonLink, Card, PageHeader } from "@/components/ui";
 
 export default async function AdminPage() {
@@ -49,7 +51,16 @@ export default async function AdminPage() {
                   <div className="text-xs text-stone-500">{u.email}</div>
                 </td>
                 <td className="px-4 py-2">{t(`role.${u.role}`)}</td>
-                <td className="px-4 py-2">{u.profile?.regCode ?? "—"}</td>
+                <td className="px-4 py-2">
+                  {u.profile?.regCode ?? "—"}
+                  {u.profile && <RegistryFacts profile={u.profile} t={t} locale={locale} compact />}
+                  {u.profile?.regCode && (
+                    <form action={recheckCompany}>
+                      <input type="hidden" name="userId" value={u.id} />
+                      <button className="text-xs text-stone-500 underline">{t("verify.recheck")}</button>
+                    </form>
+                  )}
+                </td>
                 <td className="px-4 py-2">{formatDate(u.createdAt, locale)}</td>
                 <td className="px-4 py-2 text-right">
                   {u.profile && (

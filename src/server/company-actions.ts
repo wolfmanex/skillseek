@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { createSession, getCurrentUser, hashPassword, requireAdmin } from "@/lib/auth";
-import { parseCompanyCsv } from "@/lib/company-import";
+import { ACTIVE_STATUS, parseCompanyCsv } from "@/lib/company-import";
 import { SUPPRESSED_FIELDS, upsertCompanies } from "@/lib/company-store";
 import { companyForToken, lookupClaim, sha256 } from "@/lib/claims";
 import { appUrl, sendEmail } from "@/lib/email";
@@ -137,6 +137,17 @@ export async function claimCompany(_prev: FormState, form: FormData): Promise<Fo
     country: existing?.country || company.country,
     serviceCountries: existing?.serviceCountries.length ? existing.serviceCountries : [company.country],
     verified: existing?.verified || company.claimVerifies,
+    // An emailed invite proves control of the register address, so record it like a registry check.
+    ...(company.claimVerifies && !existing?.verified
+      ? {
+          verifiedAt: new Date(),
+          verifiedSource: "claim",
+          registryName: company.name,
+          registryStatus: company.status === ACTIVE_STATUS ? "active" : company.status === "L" ? "liquidation" : "bankrupt",
+          registryAddress: company.address,
+          registryCheckedAt: company.updatedAt,
+        }
+      : {}),
   };
   const trades = existing?.trades.length ? undefined : { connect: company.tradeSlugs.map((slug) => ({ slug })) };
 
