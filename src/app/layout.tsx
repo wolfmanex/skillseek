@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist } from "next/font/google";
 import { Nav } from "@/components/nav";
 import { getT } from "@/lib/i18n";
@@ -24,6 +25,10 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
         <footer className="border-t border-stone-200 py-6 text-center text-xs text-stone-500">
           <p>{t("footer.tagline")}</p>
           <p className="mt-1">{t("footer.owner", { year: new Date().getFullYear() })}</p>
+          <p className="mt-2 space-x-4">
+            <Link href="/privacy" className="underline hover:text-stone-700">{t("footer.privacy")}</Link>
+            <Link href="/terms" className="underline hover:text-stone-700">{t("footer.terms")}</Link>
+          </p>
         </footer>
       </body>
     </html>

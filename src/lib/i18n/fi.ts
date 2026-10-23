@@ -11,6 +11,13 @@ export const fi: Dictionary = {
   "nav.signup": "Rekisteröidy",
   "footer.tagline": "Skillseek · Pääurakoitsijat, aliurakoitsijat ja ammattilaiset samassa paikassa",
   "footer.owner": "© {year} Wolfman OÜ. Skillseek ja sen palvelut ovat Wolfman OÜ:n omistamia ja ylläpitämiä.",
+  "footer.privacy": "Tietosuojaseloste",
+  "footer.terms": "Käyttöehdot",
+  "legal.updated": "Päivitetty viimeksi {date}",
+  "legal.draft": "Luonnos: tämä teksti odottaa juridista tarkistusta ja voi muuttua ennen Skillseekin julkista avaamista.",
+  "auth.agree": "Luomalla tilin hyväksyt {terms} ja vahvistat lukeneesi {privacy}.",
+  "auth.agree.terms": "käyttöehdot",
+  "auth.agree.privacy": "tietosuojaselosteen",
 
   "common.choose": "Valitse…",
   "common.filter": "Suodata",
