@@ -4,6 +4,7 @@ import { countryName } from "@/lib/constants";
 import { tradeName, type Locale, type T } from "@/lib/i18n";
 import type { MatchResult } from "@/lib/matching";
 import { Badge, Card, Stars } from "@/components/ui";
+import { VerifiedBadge } from "@/components/verification";
 
 export function ProCard({
   profile,
@@ -31,7 +32,7 @@ export function ProCard({
           </Link>
           <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-stone-600">
             <Badge tone={role === "SPECIALIST" ? "blue" : "stone"}>{t(`role.${role}`)}</Badge>
-            {profile.verified && <Badge tone="green">✓ {t("pro.verified")}</Badge>}
+            <VerifiedBadge profile={profile} t={t} locale={locale} />
             {profile.country && <span>{countryName(profile.country, locale)}</span>}
           </div>
         </div>

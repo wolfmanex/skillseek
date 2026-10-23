@@ -7,6 +7,7 @@ import { canPost, canRespondTo } from "@/lib/matching";
 import { formatDate, formatEuro, getT, tradeName } from "@/lib/i18n";
 import { invitePro } from "@/server/posting-actions";
 import { photoUrl } from "@/lib/storage";
+import { RegistryFacts, VerifiedBadge } from "@/components/verification";
 import { Badge, ButtonLink, Card, Empty, Stars, btnSecondaryCls, inputCls } from "@/components/ui";
 
 export default async function ProPage({ params }: PageProps<"/pros/[id]">) {
@@ -55,7 +56,7 @@ export default async function ProPage({ params }: PageProps<"/pros/[id]">) {
               <h1 className="text-2xl font-bold">{p.companyName || p.displayName}</h1>
               <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
                 <Badge tone={user.role === "SPECIALIST" ? "blue" : "stone"}>{t(`role.${user.role}`)}</Badge>
-                {p.verified && <Badge tone="green">✓ {t("pro.verified")}</Badge>}
+                <VerifiedBadge profile={p} t={t} locale={locale} />
                 {user.role !== "CONTRACTOR" && (
                   <span className={p.available ? "text-green-700" : "text-stone-500"}>
                     {p.available ? t("pro.available") : t("pro.unavailable")}
@@ -153,6 +154,18 @@ export default async function ProPage({ params }: PageProps<"/pros/[id]">) {
                 <p className="text-sm">{p.serviceCountries.map((c) => countryName(c, locale)).join(", ")}</p>
               </div>
             )}
+          </Card>
+        )}
+        {p.registryCheckedAt && p.regCode && (
+          <Card>
+            <h2 className="mb-3 font-semibold">{t("verify.title")}</h2>
+            <RegistryFacts profile={p} t={t} locale={locale} />
+          </Card>
+        )}
+        {isMe && !p.verified && (
+          <Card>
+            <p className="text-sm text-stone-600">{t("verify.cta")}</p>
+            <Link href="/profile/edit" className="mt-2 inline-block text-sm font-medium text-amber-700 underline">{t("verify.submit")}</Link>
           </Card>
         )}
         {invitable.length > 0 && (

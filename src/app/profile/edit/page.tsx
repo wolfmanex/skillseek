@@ -7,7 +7,9 @@ import { MAX_PHOTOS, photoUrl, storageEnabled } from "@/lib/storage";
 import { PhotoUploader } from "@/components/photo-uploader";
 import { ActionForm, SubmitButton } from "@/components/forms";
 import { CountryCheckboxes, CountrySelect, TradeCheckboxes } from "@/components/pickers";
-import { Card, Field, PageHeader, inputCls } from "@/components/ui";
+import { RegistryFacts, VerifiedBadge } from "@/components/verification";
+import { verifyCompany } from "@/server/verification-actions";
+import { Card, Field, PageHeader, btnSecondaryCls, inputCls } from "@/components/ui";
 
 export default async function EditProfilePage() {
   const user = await requireUser();
@@ -30,14 +32,9 @@ export default async function EditProfilePage() {
             <input name="displayName" required defaultValue={p?.displayName} className={inputCls} />
           </Field>
           {isCompany && (
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label={t("profile.company")}>
-                <input name="companyName" defaultValue={p?.companyName ?? ""} className={inputCls} />
-              </Field>
-              <Field label={t("profile.regCode")} hint={t("profile.regCodeHint")}>
-                <input name="regCode" defaultValue={p?.regCode ?? ""} inputMode="numeric" className={inputCls} />
-              </Field>
-            </div>
+            <Field label={t("profile.company")}>
+              <input name="companyName" defaultValue={p?.companyName ?? ""} className={inputCls} />
+            </Field>
           )}
           <Field label={t("profile.bio")}>
             <textarea name="bio" rows={4} defaultValue={p?.bio} className={inputCls} />
@@ -97,6 +94,36 @@ export default async function EditProfilePage() {
 
         <SubmitButton>{t("common.save")}</SubmitButton>
       </ActionForm>
+
+      {/* Verification has its own form: it checks the registers and saves the result straight away. */}
+      {p && (
+        <Card className="mt-6 space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h2 className="font-semibold">{t("verify.title")}</h2>
+              <p className="text-xs text-stone-500">{t("verify.intro")}</p>
+            </div>
+            <VerifiedBadge profile={p} t={t} locale={locale} />
+          </div>
+          <ActionForm action={verifyCompany} className="space-y-3">
+            <Field label={t("profile.regCode")} hint={t("profile.regCodeHint")}>
+              <div className="flex flex-wrap gap-2">
+                <input
+                  name="regCode"
+                  required
+                  defaultValue={p.regCode ?? ""}
+                  inputMode="numeric"
+                  maxLength={12}
+                  placeholder="12345678"
+                  className={`${inputCls} max-w-48`}
+                />
+                <SubmitButton className={btnSecondaryCls}>{p.verified ? t("verify.recheck") : t("verify.submit")}</SubmitButton>
+              </div>
+            </Field>
+          </ActionForm>
+          <RegistryFacts profile={p} t={t} locale={locale} />
+        </Card>
+      )}
 
       {/* Photos live outside the profile form: they save immediately on upload. */}
       {p && storageEnabled() && (
