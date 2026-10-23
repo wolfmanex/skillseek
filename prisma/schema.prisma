@@ -101,10 +101,23 @@ model Profile {
   available       Boolean   @default(true)
   availableFrom   DateTime?
   verified        Boolean   @default(false)
+  // How the badge was earned: "registry" (self-service check), "admin" (manual) or "claim" (imported company claimed).
+  verifiedAt      DateTime?
+  verifiedSource  String?
+  // Snapshot from the Estonian Business Register and the Register of Economic Activities (MTR) at the last check.
+  registryName      String?
+  registryStatus    String?
+  registryAddress   String?
+  registryCheckedAt DateTime?
+  mtrStatus         String? // "registered", "not_found" or "unknown"
+  mtrActivities     String[]
+  mtrUrl            String?
   updatedAt       DateTime  @updatedAt
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   trades Trade[]
+
+  @@index([regCode])
 }
 
 model Trade {

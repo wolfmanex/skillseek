@@ -25,7 +25,6 @@ export async function saveProfile(_prev: FormState, form: FormData): Promise<For
   const data = {
     displayName,
     companyName: optStr(form, "companyName"),
-    regCode: optStr(form, "regCode"),
     bio: str(form, "bio"),
     phone: optStr(form, "phone"),
     website: website && /^https?:\/\//i.test(website) ? website : website ? `https://${website}` : null,
@@ -55,6 +54,10 @@ export async function toggleVerified(form: FormData) {
   const userId = str(form, "userId");
   const profile = await db.profile.findUnique({ where: { userId } });
   if (!profile) return;
-  await db.profile.update({ where: { userId }, data: { verified: !profile.verified } });
+  const verified = !profile.verified;
+  await db.profile.update({
+    where: { userId },
+    data: { verified, verifiedAt: verified ? new Date() : null, verifiedSource: verified ? "admin" : null },
+  });
   revalidatePath("/admin");
 }
