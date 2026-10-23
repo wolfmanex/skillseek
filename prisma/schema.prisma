@@ -188,3 +188,25 @@ model Review {
 
   @@unique([postingId, authorId, subjectId])
 }
+
+// Sign-ups from the public landing page for the invite-only beta. Not linked to a User:
+// people are invited from here and create their account later.
+model WaitlistEntry {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  role        Role
+  name        String
+  companyName String?
+  regCode     String?
+  phone       String?
+  region      String
+  trades      String[]
+  message     String    @default("")
+  locale      String
+  source      String?
+  invitedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([role, region])
+}
