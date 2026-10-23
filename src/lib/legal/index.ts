@@ -8,13 +8,12 @@ export type { LegalBlock, LegalDoc } from "./types";
 
 /**
  * The operator named in the privacy policy and terms.
- * TODO before launch: fill in a contact email address.
  */
 export const OPERATOR = {
   company: "Wolfman OÜ",
   regCode: "17106702",
   address: "L. Tolstoi tn 6-2, 50106 Tartu",
-  email: "[contact email]",
+  email: "tonu.mets@wolfmanex.com",
 };
 
 /** Shown on both pages as the last-updated date. Change it whenever the texts change. */
