@@ -34,6 +34,13 @@ export default async function SignupPage() {
           <Field label={t("auth.password")} hint={t("auth.passwordHint")}>
             <input name="password" type="password" required minLength={8} autoComplete="new-password" className={inputCls} />
           </Field>
+          <p className="text-xs text-stone-600">
+            {t("auth.agree").split(/(\{terms\}|\{privacy\})/).map((part, i) =>
+              part === "{terms}" ? <Link key={i} href="/terms" target="_blank" className="underline">{t("auth.agree.terms")}</Link>
+              : part === "{privacy}" ? <Link key={i} href="/privacy" target="_blank" className="underline">{t("auth.agree.privacy")}</Link>
+              : part,
+            )}
+          </p>
           <SubmitButton className="w-full rounded-md bg-amber-500 px-4 py-2 text-sm font-semibold text-stone-950 hover:bg-amber-400">
             {t("auth.signup")}
           </SubmitButton>

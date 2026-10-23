@@ -11,6 +11,13 @@ export const et: Dictionary = {
   "nav.signup": "Liitu",
   "footer.tagline": "Skillseek · Peatöövõtjad, alltöövõtjad ja spetsialistid ühes kohas",
   "footer.owner": "© {year} Wolfman OÜ. Skillseek ja selle teenused kuuluvad ettevõttele Wolfman OÜ ning neid haldab Wolfman OÜ.",
+  "footer.privacy": "Privaatsuspoliitika",
+  "footer.terms": "Kasutustingimused",
+  "legal.updated": "Viimati uuendatud {date}",
+  "legal.draft": "Mustand: see tekst ootab juristi ülevaatust ja võib enne Skillseeki avalikku käivitamist muutuda.",
+  "auth.agree": "Konto luues nõustud {terms} ja kinnitad, et oled tutvunud {privacy}.",
+  "auth.agree.terms": "kasutustingimustega",
+  "auth.agree.privacy": "privaatsuspoliitikaga",
 
   "common.choose": "Vali…",
   "common.filter": "Filtreeri",

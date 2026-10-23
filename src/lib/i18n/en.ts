@@ -9,6 +9,13 @@ export const en = {
   "nav.signup": "Sign up",
   "footer.tagline": "Skillseek · Construction contractors, subcontractors and specialists in one place",
   "footer.owner": "© {year} Wolfman OÜ. Skillseek and its services are owned and operated by Wolfman OÜ.",
+  "footer.privacy": "Privacy Policy",
+  "footer.terms": "Terms of Service",
+  "legal.updated": "Last updated {date}",
+  "legal.draft": "Draft: this text is awaiting legal review and may change before Skillseek launches publicly.",
+  "auth.agree": "By creating an account, you accept the {terms} and confirm you have read the {privacy}.",
+  "auth.agree.terms": "Terms of Service",
+  "auth.agree.privacy": "Privacy Policy",
 
   "common.choose": "Choose…",
   "common.filter": "Filter",
