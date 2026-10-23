@@ -58,6 +58,7 @@ model User {
   messages       Message[]
   reviewsWritten Review[]      @relation("ReviewAuthor")
   reviewsGot     Review[]      @relation("ReviewSubject")
+  claimedCompany Company?
 }
 
 model Session {
@@ -187,4 +188,44 @@ model Review {
   subject User    @relation("ReviewSubject", fields: [subjectId], references: [id], onDelete: Cascade)
 
   @@unique([postingId, authorId, subjectId])
+}
+
+// A firm imported from a public register before it has an account on Skillseek.
+// Not shown publicly; an admin sends it a claim link that creates a prefilled account and profile.
+model Company {
+  id         String    @id @default(cuid())
+  regCode    String    @unique
+  country    String    @default("EE")
+  name       String
+  legalForm  String?
+  status     String    // Register status code: R registered, L in liquidation, N in bankruptcy
+  address    String?
+  county     String?
+  city       String?
+  email      String?
+  phone      String?
+  website    String?
+  emtakCodes String[]
+  mainEmtak  String?
+  tradeSlugs String[]
+  foundedAt  DateTime?
+  source     String    @default("ariregister")
+  importedAt DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  // Only a hash of the claim token is stored. The same link also lets the firm opt out.
+  claimTokenHash      String?   @unique
+  claimTokenExpiresAt DateTime?
+  // True when the link was emailed to the address in the register, so claiming proves control of it.
+  claimVerifies       Boolean   @default(false)
+  invitedAt           DateTime?
+  invitedEmail        String?
+  claimedAt           DateTime?
+  claimedById         String?   @unique
+  // Set when the firm asks not to be contacted; contact details are wiped and re-imports skip it.
+  optedOutAt          DateTime?
+
+  claimedBy User? @relation(fields: [claimedById], references: [id], onDelete: SetNull)
+
+  @@index([country, claimedAt])
 }
