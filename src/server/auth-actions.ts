@@ -15,6 +15,7 @@ import {
   verifyPassword,
 } from "@/lib/auth";
 import { appUrl, sendEmail } from "@/lib/email";
+import { deleteObject } from "@/lib/storage";
 import { getT, isLocale, LOCALE_COOKIE, translator } from "@/lib/i18n";
 import { str, type FormState } from "@/server/form";
 
@@ -92,6 +93,30 @@ export async function changePassword(_prev: FormState, form: FormData): Promise<
   }
   await db.user.update({ where: { id: user.id }, data: { passwordHash: await hashPassword(next) } });
   return { ok: t("account.saved") };
+}
+
+/**
+ * Permanently deletes the signed-in user's account (GDPR right to erasure).
+ * The database cascades remove the profile, postings and their applications,
+ * applications, messages, reviews, sessions and sign-in links; profile photos
+ * are removed from storage.
+ */
+export async function deleteAccount(_prev: FormState, form: FormData): Promise<FormState> {
+  const user = await requireUser();
+  const { t } = await getT();
+  if (str(form, "confirmEmail").toLowerCase() !== user.email) return { error: t("account.delete.error.email") };
+  if (!(await sessionIsFresh()) && !(await verifyPassword(str(form, "currentPassword"), user.passwordHash))) {
+    return { error: t("account.error.current") };
+  }
+
+  const photoKeys = user.profile?.photoKeys ?? [];
+  await db.user.delete({ where: { id: user.id } });
+  await Promise.all(photoKeys.map(deleteObject));
+  await destroySession();
+
+  const ut = translator(isLocale(user.locale) ? user.locale : "en");
+  await sendEmail({ to: user.email, subject: ut("email.deletedSubject"), text: ut("email.deletedBody") });
+  redirect("/account/deleted");
 }
 
 export async function logout() {
