@@ -50,3 +50,7 @@ export const TRADES: { slug: string; nameEn: string; nameEt: string; nameFi: str
   { slug: "windows-doors", nameEn: "Windows & doors", nameEt: "Akende ja uste paigaldus", nameFi: "Ikkuna- ja oviasennukset" },
   { slug: "scaffolding", nameEn: "Scaffolding", nameEt: "Tellingutööd", nameFi: "Telinetyöt" },
 ];
+
+// Where waitlist sign-ups work. The beta starts in Tallinn and Harju County, so that comes first.
+export const WAITLIST_REGIONS = ["harju", "estonia", "finland", "eu"] as const;
+export type WaitlistRegion = (typeof WAITLIST_REGIONS)[number];

@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { formatDate, getT } from "@/lib/i18n";
 import { toggleVerified } from "@/server/profile-actions";
-import { Badge, Card, PageHeader } from "@/components/ui";
+import { Badge, ButtonLink, Card, PageHeader } from "@/components/ui";
 
 export default async function AdminPage() {
   await requireAdmin();
@@ -16,7 +16,11 @@ export default async function AdminPage() {
 
   return (
     <div>
-      <PageHeader title={t("nav.admin")} subtitle={t("admin.stats", { users: users.length, postings, applications })} />
+      <PageHeader
+        title={t("nav.admin")}
+        subtitle={t("admin.stats", { users: users.length, postings, applications })}
+        action={<ButtonLink href="/admin/waitlist" secondary>{t("admin.waitlist")}</ButtonLink>}
+      />
       <Card className="overflow-x-auto p-0">
         <table className="w-full text-left text-sm">
           <thead className="bg-stone-100 text-xs uppercase text-stone-600">

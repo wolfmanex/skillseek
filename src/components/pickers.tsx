@@ -6,7 +6,9 @@ import { inputCls } from "@/components/ui";
 const chip =
   "flex cursor-pointer items-center gap-2 rounded-md border border-stone-200 px-2 py-1.5 text-sm has-[:checked]:border-amber-500 has-[:checked]:bg-amber-50";
 
-export function TradeCheckboxes({ trades, selected, locale }: { trades: Trade[]; selected: string[]; locale: Locale }) {
+type TradeNames = Pick<Trade, "slug" | "nameEn" | "nameEt" | "nameFi">;
+
+export function TradeCheckboxes({ trades, selected, locale }: { trades: TradeNames[]; selected: string[]; locale: Locale }) {
   return (
     <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
       {sortTrades(trades, locale).map((trade) => (

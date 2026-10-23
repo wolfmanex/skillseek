@@ -68,8 +68,8 @@ export async function Nav() {
           ) : (
             <>
               <Link href="/login" className={link}>{t("nav.login")}</Link>
-              <Link href="/signup" className="rounded-md bg-amber-500 px-3 py-1 text-sm font-semibold text-stone-950 hover:bg-amber-400">
-                {t("nav.signup")}
+              <Link href="/#waitlist" className="rounded-md bg-amber-500 px-3 py-1 text-sm font-semibold text-stone-950 hover:bg-amber-400">
+                {t("nav.waitlist")}
               </Link>
             </>
           )}
