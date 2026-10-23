@@ -1,4 +1,4 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { en, type Dictionary } from "./en";
 import { et } from "./et";
 import { fi } from "./fi";
@@ -34,9 +34,26 @@ export function translator(locale: Locale): T {
   };
 }
 
+/** Picks the first supported language from an Accept-Language header, e.g. "et-EE,et;q=0.9,en;q=0.8". */
+export function localeFromAcceptLanguage(header: string | null | undefined): Locale | undefined {
+  if (!header) return undefined;
+  const ranked = header
+    .split(",")
+    .map((part, i) => {
+      const [tag, ...params] = part.trim().split(";");
+      const q = params.map((p) => p.trim()).find((p) => p.startsWith("q="));
+      return { lang: tag.toLowerCase().split("-")[0], q: q ? Number(q.slice(2)) || 0 : 1, i };
+    })
+    .filter((r) => r.q > 0)
+    .sort((a, b) => b.q - a.q || a.i - b.i);
+  return ranked.find((r) => isLocale(r.lang))?.lang as Locale | undefined;
+}
+
+// The language switch sets a cookie. Without one, first-time visitors get their browser's language.
 export async function getLocale(): Promise<Locale> {
   const value = (await cookies()).get(LOCALE_COOKIE)?.value;
-  return isLocale(value) ? value : DEFAULT_LOCALE;
+  if (isLocale(value)) return value;
+  return localeFromAcceptLanguage((await headers()).get("accept-language")) ?? DEFAULT_LOCALE;
 }
 
 export async function getT() {
