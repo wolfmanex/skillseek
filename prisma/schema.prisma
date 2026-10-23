@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   // On Neon, DATABASE_URL is the pooled connection and DATABASE_URL_UNPOOLED the direct one (used for migrations).
   // Both names match what the Neon integration on Vercel sets automatically.
   url       = env("DATABASE_URL")
@@ -73,36 +73,36 @@ model Session {
 
 // One-time email sign-in links. Only a hash of the token is stored.
 model LoginToken {
-  tokenHash String   @id
+  tokenHash String    @id
   userId    String
   expiresAt DateTime
   usedAt    DateTime?
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
 }
 
 model Profile {
-  id              String    @id @default(cuid())
-  userId          String    @unique
-  displayName     String
-  companyName     String?
-  regCode         String?
-  bio             String    @default("")
-  phone           String?
-  website         String?
+  id               String    @id @default(cuid())
+  userId           String    @unique
+  displayName      String
+  companyName      String?
+  regCode          String?
+  bio              String    @default("")
+  phone            String?
+  website          String?
   country          String?
   serviceCountries String[]
-  certifications  String[]
-  portfolioUrls   String[]
-  photoKeys       String[]
-  yearsExperience Int?
-  hourlyRate      Int?
-  available       Boolean   @default(true)
-  availableFrom   DateTime?
-  verified        Boolean   @default(false)
-  updatedAt       DateTime  @updatedAt
+  certifications   String[]
+  portfolioUrls    String[]
+  photoKeys        String[]
+  yearsExperience  Int?
+  hourlyRate       Int?
+  available        Boolean   @default(true)
+  availableFrom    DateTime?
+  verified         Boolean   @default(false)
+  updatedAt        DateTime  @updatedAt
 
   user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   trades Trade[]
@@ -119,21 +119,21 @@ model Trade {
 }
 
 model Posting {
-  id             String        @id @default(cuid())
-  authorId       String
-  title          String
-  description    String
-  country         String
-  city           String?
-  startDate      DateTime?
-  endDate        DateTime?
-  budgetMin      Int?
-  budgetMax      Int?
-  seeking        Seeking       @default(ANY)
-  requiredCerts  String[]
-  status         PostingStatus @default(OPEN)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id            String        @id @default(cuid())
+  authorId      String
+  title         String
+  description   String
+  country       String
+  city          String?
+  startDate     DateTime?
+  endDate       DateTime?
+  budgetMin     Int?
+  budgetMax     Int?
+  seeking       Seeking       @default(ANY)
+  requiredCerts String[]
+  status        PostingStatus @default(OPEN)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
   author       User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   trades       Trade[]
@@ -198,7 +198,7 @@ model Company {
   country    String    @default("EE")
   name       String
   legalForm  String?
-  status     String    // Register status code: R registered, L in liquidation, N in bankruptcy
+  status     String // Register status code: R registered, L in liquidation, N in bankruptcy
   address    String?
   county     String?
   city       String?
@@ -228,4 +228,26 @@ model Company {
   claimedBy User? @relation(fields: [claimedById], references: [id], onDelete: SetNull)
 
   @@index([country, claimedAt])
+}
+
+// Sign-ups from the public landing page for the invite-only beta. Not linked to a User:
+// people are invited from here and create their account later.
+model WaitlistEntry {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  role        Role
+  name        String
+  companyName String?
+  regCode     String?
+  phone       String?
+  region      String
+  trades      String[]
+  message     String    @default("")
+  locale      String
+  source      String?
+  invitedAt   DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([role, region])
 }

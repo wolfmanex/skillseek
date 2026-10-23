@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined }) }));
+vi.mock("next/headers", () => ({ cookies: async () => ({ get: () => undefined }), headers: async () => new Headers() }));
 
 import { en } from "../i18n/en";
 import { et } from "../i18n/et";
 import { fi } from "../i18n/fi";
-import { translator } from "../i18n";
+import { localeFromAcceptLanguage, translator } from "../i18n";
 
 describe("i18n", () => {
   it.each([
@@ -26,5 +26,14 @@ describe("i18n", () => {
   it("interpolates variables", () => {
     expect(translator("et")("dash.hello", { name: "Mari" })).toBe("Tere, Mari");
     expect(translator("fi")("dash.hello", { name: "Mari" })).toBe("Hei, Mari");
+  });
+
+  it("picks the browser language from Accept-Language", () => {
+    expect(localeFromAcceptLanguage("et-EE,et;q=0.9,en-US;q=0.8")).toBe("et");
+    expect(localeFromAcceptLanguage("ru-RU,ru;q=0.9,fi;q=0.7,en;q=0.5")).toBe("fi");
+    expect(localeFromAcceptLanguage("en;q=0.5,fi;q=0.8")).toBe("fi");
+    expect(localeFromAcceptLanguage("de-DE,fr;q=0.9")).toBeUndefined();
+    expect(localeFromAcceptLanguage("et;q=0,en")).toBe("en");
+    expect(localeFromAcceptLanguage(null)).toBeUndefined();
   });
 });
