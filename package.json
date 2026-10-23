@@ -14,7 +14,7 @@
     "db:seed": "prisma db seed",
     "db:demo": "tsx prisma/seed.ts --demo",
     "postinstall": "prisma generate",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build"
+    "vercel-build": "prisma generate && node scripts/migrate-on-deploy.mjs && next build"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1148.0",
