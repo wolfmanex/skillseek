@@ -11,8 +11,9 @@ import { RegistryFacts, VerifiedBadge } from "@/components/verification";
 import { verifyCompany } from "@/server/verification-actions";
 import { Card, Field, PageHeader, btnSecondaryCls, inputCls } from "@/components/ui";
 
-export default async function EditProfilePage() {
+export default async function EditProfilePage({ searchParams }: PageProps<"/profile/edit">) {
   const user = await requireUser();
+  const claimed = (await searchParams).claimed === "1";
   const { t, locale } = await getT();
   const trades = await db.trade.findMany({ orderBy: { nameEn: "asc" } });
   const p = user.profile;
@@ -23,7 +24,7 @@ export default async function EditProfilePage() {
     <div className="mx-auto max-w-3xl">
       <PageHeader
         title={p ? t("profile.editTitle") : t("profile.createTitle")}
-        subtitle={p ? undefined : t("profile.createSubtitle")}
+        subtitle={claimed ? t("claim.welcome") : p ? undefined : t("profile.createSubtitle")}
       />
       <ActionForm action={saveProfile} className="space-y-6">
         <Card className="space-y-4">

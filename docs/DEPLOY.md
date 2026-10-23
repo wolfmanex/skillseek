@@ -65,3 +65,13 @@ If the R2 variables are missing, the app still works. It just hides photo upload
 4. Optional demo data (fake users and jobs, password `demo1234`): run `DATABASE_URL=<Neon URL> npm run db:demo` from a checkout. Don't do this on a database real testers use.
 
 Health check for uptime monitors: `GET /api/health` returns `{"ok":true}` when the database is reachable.
+
+## 6. Importing Estonian construction firms (optional)
+
+The **Import companies** GitHub Action loads construction firms (EMTAK 41–43, plus metal structures and landscaping) from the Business Register's free open data into the database. Imported firms aren't public. An admin invites them from **Admin → Imported companies** to claim a prefilled profile.
+
+1. In Neon, copy the production connection string (the pooled one is fine).
+2. On GitHub, go to the repo's **Settings → Secrets and variables → Actions → New repository secret**, name it `DATABASE_URL` and paste the string.
+3. Go to **Actions → Import companies → Run workflow**. Tick "dry run" first if you want to see the counts without writing anything.
+
+Run it again whenever you like (the register updates daily): it refreshes known firms, adds new ones and never touches firms that claimed or opted out. Sole proprietors (FIE) aren't imported, because they're private individuals. Invitations go only to the email the firm filed in the register, and until Resend has a verified domain they only reach the account owner's address. Data source attribution: "Contains data from the Estonian e-Business Register (RIK), CC BY 4.0".
